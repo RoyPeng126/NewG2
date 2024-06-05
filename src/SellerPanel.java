@@ -1,9 +1,11 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.List;
 import java.util.Vector;
 
 public class SellerPanel extends JPanel {
@@ -16,24 +18,38 @@ public class SellerPanel extends JPanel {
         this.userDAO = userDAO;
         this.sellerID = userDAO.getCurrentUserID();  // Get current logged-in seller ID
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(20, 20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
+        // Title
+        JLabel titleLabel = new JLabel("My Books");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(titleLabel, BorderLayout.NORTH);
+
+        // Table
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Book Name");
         tableModel.addColumn("Author");
         tableModel.addColumn("Edition");
-        tableModel.addColumn("SellerID");
-        tableModel.addColumn("BuyerID");
+        tableModel.addColumn("Seller ID");
+        tableModel.addColumn("Buyer ID");
         tableModel.addColumn("Status");
 
         bookTable = new JTable(tableModel);
+        bookTable.setFillsViewportHeight(true);
+        bookTable.setRowHeight(30);
+        bookTable.setFont(new Font("SansSerif", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(bookTable);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(scrollPane, BorderLayout.CENTER);
 
+        // Buttons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        JButton addBookButton = new JButton("Add Book");
+        JButton addBookButton = createButton("Add Book", "Add a new book");
         addBookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,7 +58,7 @@ public class SellerPanel extends JPanel {
         });
         buttonPanel.add(addBookButton);
 
-        JButton checkMyBooksButton = new JButton("Check My Books");
+        JButton checkMyBooksButton = createButton("Check My Books", "Refresh the list of my books");
         checkMyBooksButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,14 +67,14 @@ public class SellerPanel extends JPanel {
         });
         buttonPanel.add(checkMyBooksButton);
 
-        JButton updateStatusButton = new JButton("Update Status");
+        JButton updateStatusButton = createButton("Update Status", "Update the status of the selected book");
         updateStatusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = bookTable.getSelectedRow();
                 if (selectedRow >= 0) {
-                    String bookName = (String) tableModel.getValueAt(selectedRow, 0);
-                    userDAO.updateBookStatus(sellerID, bookName);
+                    String bookName = (String) tableModel.getValueAt(selectedRow, 0); // Use bookName to identify the book
+                    userDAO.updateBookStatus(bookName, "Sold");
                     JOptionPane.showMessageDialog(SellerPanel.this, "Status updated!");
                     loadBooks();  // Reload books to show the updated status
                 } else {
@@ -68,9 +84,28 @@ public class SellerPanel extends JPanel {
         });
         buttonPanel.add(updateStatusButton);
 
+        JButton viewReviewsButton = createButton("View Reviews", "View reviews for the selected book");
+        viewReviewsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openReviewsDialog();
+            }
+        });
+        buttonPanel.add(viewReviewsButton);
+
         add(buttonPanel, BorderLayout.SOUTH);
 
         loadBooks();
+    }
+
+    private JButton createButton(String text, String toolTip) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setToolTipText(toolTip);
+        button.setFocusPainted(false);
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        return button;
     }
 
     private void loadBooks() {
@@ -101,7 +136,7 @@ public class SellerPanel extends JPanel {
         addBookFrame.setSize(300, 250);
         addBookFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel addBookPanel = new JPanel(new GridLayout(5, 2));
+        JPanel addBookPanel = new JPanel(new GridLayout(4, 2));
 
         JLabel bookNameLabel = new JLabel("Book Name:");
         JTextField bookNameField = new JTextField();
@@ -118,11 +153,6 @@ public class SellerPanel extends JPanel {
         addBookPanel.add(editionLabel);
         addBookPanel.add(editionField);
 
-        JLabel sellerIDLabel = new JLabel("Seller ID:");
-        JTextField sellerIDField = new JTextField();
-        addBookPanel.add(sellerIDLabel);
-        addBookPanel.add(sellerIDField);
-
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new ActionListener() {
             @Override
@@ -130,7 +160,6 @@ public class SellerPanel extends JPanel {
                 String bookName = bookNameField.getText();
                 String author = authorField.getText();
                 String edition = editionField.getText();
-                String sellerID = sellerIDField.getText();
                 userDAO.addBook(bookName, author, edition, sellerID);
                 JOptionPane.showMessageDialog(addBookFrame, "Book added!");
                 addBookFrame.dispose();
@@ -141,5 +170,32 @@ public class SellerPanel extends JPanel {
 
         addBookFrame.add(addBookPanel);
         addBookFrame.setVisible(true);
+    }
+
+    private void openReviewsDialog() {
+        JFrame reviewsFrame = new JFrame("View Reviews");
+        reviewsFrame.setSize(400, 300);
+        reviewsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        DefaultTableModel reviewsTableModel = new DefaultTableModel();
+        reviewsTableModel.addColumn("Book Name");
+        reviewsTableModel.addColumn("User ID");
+        reviewsTableModel.addColumn("Review Text");
+        reviewsTableModel.addColumn("Rating");
+        JTable reviewsTable = new JTable(reviewsTableModel);
+        JScrollPane scrollPane = new JScrollPane(reviewsTable);
+        reviewsFrame.add(scrollPane, BorderLayout.CENTER);
+
+        List<Review> reviews = userDAO.getReviewsForSeller(sellerID);
+        for (Review review : reviews) {
+            Vector<String> row = new Vector<>();
+            row.add(review.getBookname());
+            row.add(review.getBuyerId());
+            row.add(review.getComment());
+            row.add(review.getRating());
+            reviewsTableModel.addRow(row);
+        }
+
+        reviewsFrame.setVisible(true);
     }
 }

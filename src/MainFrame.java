@@ -2,33 +2,23 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
     private UserDAO userDAO;
 
     public MainFrame() {
-        setTitle("Seller Application");
-        setSize(800, 600);
+        userDAO = new UserDAO(null); // Initialize with no current user ID
+        setTitle("Second-Hand Trading Platform");
+        setSize(1024, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        userDAO = new UserDAO();
+        // Initialize with LoginPanel
+        LoginPanel loginPanel = new LoginPanel(userDAO);
+        add(loginPanel, BorderLayout.CENTER);
 
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
+        setVisible(true);
+    }
 
-        LoginPanel loginPanel = new LoginPanel(cardLayout, mainPanel, userDAO);
-        mainPanel.add(loginPanel, "login");
-
-        RoleSelectionPanel roleSelectionPanel = new RoleSelectionPanel(cardLayout, mainPanel);
-        mainPanel.add(roleSelectionPanel, "roleSelection");
-
-        SellerPanel sellerPanel = new SellerPanel(userDAO);
-        mainPanel.add(sellerPanel, "seller");
-
-        BuyerPanel buyerPanel = new BuyerPanel(userDAO);
-        mainPanel.add(buyerPanel, "buyer");
-
-        add(mainPanel);
-        cardLayout.show(mainPanel, "login");
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MainFrame());
     }
 }

@@ -1,58 +1,87 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
     private UserDAO userDAO;
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
+    private JTextField userIDField;
+    private JPasswordField passwordField;
 
-    public LoginPanel(CardLayout cardLayout, JPanel mainPanel, UserDAO userDAO) {
-        this.cardLayout = cardLayout;
-        this.mainPanel = mainPanel;
+    public LoginPanel(UserDAO userDAO) {
         this.userDAO = userDAO;
+        setLayout(new BorderLayout(20, 20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        setLayout(new GridLayout(3, 2));
+        // Title
+        JLabel titleLabel = new JLabel("User Login");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(titleLabel, BorderLayout.NORTH);
 
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameField = new JTextField();
-        add(usernameLabel);
-        add(usernameField);
+        // Form Panel
+        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel userIDLabel = new JLabel("User ID:");
+        userIDField = new JTextField();
+        formPanel.add(userIDLabel);
+        formPanel.add(userIDField);
 
         JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField();
-        add(passwordLabel);
-        add(passwordField);
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
 
-        JButton loginButton = new JButton("Login");
+        add(formPanel, BorderLayout.CENTER);
+
+        // Button Panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        JButton loginButton = createButton("Login", "Login with your credentials");
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
+                String userID = userIDField.getText();
                 String password = new String(passwordField.getPassword());
-                if (userDAO.checkUser(username, password)) {
-                    JOptionPane.showMessageDialog(LoginPanel.this, "Login successful");
-                    cardLayout.show(mainPanel, "roleSelection");
+                if (userDAO.validateUser(userID, password)) {
+                    JOptionPane.showMessageDialog(LoginPanel.this, "Login successful!");
+                    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(LoginPanel.this);
+                    frame.getContentPane().removeAll();
+                    frame.getContentPane().add(new RoleSelectionPanel(userDAO));
+                    frame.revalidate();
                 } else {
-                    JOptionPane.showMessageDialog(LoginPanel.this, "Invalid username or password. Please try again.");
+                    JOptionPane.showMessageDialog(LoginPanel.this, "Invalid userID or password.");
                 }
             }
         });
-        add(loginButton);
+        buttonPanel.add(loginButton);
 
-        JButton registerButton = new JButton("Register");
+        JButton registerButton = createButton("Register", "Create a new account");
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-                userDAO.addUser(username, password);
-                JOptionPane.showMessageDialog(LoginPanel.this, "Registration successful. You can now log in.");
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(LoginPanel.this);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().add(new RegistrationPanel(userDAO));
+                frame.revalidate();
             }
         });
-        add(registerButton);
+        buttonPanel.add(registerButton);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private JButton createButton(String text, String toolTip) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setToolTipText(toolTip);
+        button.setFocusPainted(false);
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        return button;
     }
 }

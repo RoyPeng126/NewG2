@@ -1,46 +1,72 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RegistrationPanel extends JPanel {
-    private JTextField studentIDField;
-    private JPasswordField passwordField;
-    private JButton registerButton;
     private UserDAO userDAO;
+    private JTextField userIDField;
+    private JPasswordField passwordField;
 
     public RegistrationPanel(UserDAO userDAO) {
         this.userDAO = userDAO;
-        setLayout(new GridLayout(3, 2));
+        setLayout(new BorderLayout(20, 20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JLabel studentIDLabel = new JLabel("Student ID:");
-        add(studentIDLabel);
+        // Title
+        JLabel titleLabel = new JLabel("User Registration");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(titleLabel, BorderLayout.NORTH);
 
-        studentIDField = new JTextField();
-        add(studentIDField);
+        // Form Panel
+        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel userIDLabel = new JLabel("User ID:");
+        userIDField = new JTextField();
+        formPanel.add(userIDLabel);
+        formPanel.add(userIDField);
 
         JLabel passwordLabel = new JLabel("Password:");
-        add(passwordLabel);
-
         passwordField = new JPasswordField();
-        add(passwordField);
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
 
-        registerButton = new JButton("Register");
+        add(formPanel, BorderLayout.CENTER);
+
+        // Button Panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        JButton registerButton = createButton("Register", "Create a new account");
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String studentID = studentIDField.getText();
+                String userID = userIDField.getText();
                 String password = new String(passwordField.getPassword());
-                userDAO.addUser(studentID, password);
+                userDAO.addUser(userID, password);
                 JOptionPane.showMessageDialog(RegistrationPanel.this, "Registration successful!");
-                clearFields();
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(RegistrationPanel.this);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().add(new LoginPanel(userDAO));
+                frame.revalidate();
             }
         });
-        add(registerButton);
+        buttonPanel.add(registerButton);
+
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private void clearFields() {
-        studentIDField.setText("");
-        passwordField.setText("");
+    private JButton createButton(String text, String toolTip) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setToolTipText(toolTip);
+        button.setFocusPainted(false);
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        return button;
     }
 }

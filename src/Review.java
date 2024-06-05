@@ -2,13 +2,15 @@ public class Review {
     private String buyerId;
     private String sellerId;
     private String comment;
-    private int rating;
+    private String rating;
+    private String bookname;
 
-    public Review(String buyerId, String sellerId, String comment, int rating) {
+    public Review(String buyerId, String sellerId, String comment, String rating, String bookname) {
         this.buyerId = buyerId;
         this.sellerId = sellerId;
         this.comment = comment;
         this.rating = rating;
+        this.bookname = bookname;
     }
 
     public String getBuyerId() {
@@ -23,7 +25,11 @@ public class Review {
         return comment;
     }
 
-    public int getRating() {
+    public String getRating() {
         return rating;
+    }
+
+    public String getBookname() {
+        return bookname;
     }
 }
