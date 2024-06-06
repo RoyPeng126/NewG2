@@ -34,7 +34,6 @@ public class SellerPanel extends BasePanel {
         tableModel.addColumn("Author");
         tableModel.addColumn("Edition");
         tableModel.addColumn("Seller ID");
-        tableModel.addColumn("Buyer ID");
         tableModel.addColumn("Status");
 
         bookTable = new JTable(tableModel);
@@ -104,7 +103,6 @@ public class SellerPanel extends BasePanel {
                 row.add(rs.getString("author"));
                 row.add(rs.getString("edition"));
                 row.add(rs.getString("sellerID"));
-                row.add(rs.getString("buyerID"));
                 row.add(rs.getString("status"));
                 tableModel.addRow(row);
             }
