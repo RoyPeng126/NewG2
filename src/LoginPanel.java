@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginPanel extends JPanel {
+public class LoginPanel extends BasePanel {
     private UserDAO userDAO;
     private JTextField userIDField;
     private JPasswordField passwordField;
@@ -41,7 +41,7 @@ public class LoginPanel extends JPanel {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        JButton loginButton = createButton("Login", "Login with your credentials");
+        JButton loginButton = createButton("Login", "Login with your credentials", Color.BLACK);
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,7 +60,7 @@ public class LoginPanel extends JPanel {
         });
         buttonPanel.add(loginButton);
 
-        JButton registerButton = createButton("Register", "Create a new account");
+        JButton registerButton = createButton("Register", "Create a new account", Color.BLACK);
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,13 +75,5 @@ public class LoginPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private JButton createButton(String text, String toolTip) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("SansSerif", Font.BOLD, 14));
-        button.setToolTipText(toolTip);
-        button.setFocusPainted(false);
-        button.setBackground(new Color(70, 130, 180));
-        button.setForeground(Color.WHITE);
-        return button;
-    }
+   
 }

@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Vector;
 
-public class SellerPanel extends JPanel {
+public class SellerPanel extends BasePanel {
     private JTable bookTable;
     private DefaultTableModel tableModel;
     private UserDAO userDAO;
@@ -26,7 +26,8 @@ public class SellerPanel extends JPanel {
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
-
+        
+   
         // Table
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Book Name");
@@ -49,7 +50,7 @@ public class SellerPanel extends JPanel {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        JButton addBookButton = createButton("Add Book", "Add a new book");
+        JButton addBookButton = createButton("Add Book", "Add a new book", Color.BLACK);
         addBookButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -58,16 +59,7 @@ public class SellerPanel extends JPanel {
         });
         buttonPanel.add(addBookButton);
 
-        JButton checkMyBooksButton = createButton("Check My Books", "Refresh the list of my books");
-        checkMyBooksButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadBooks();
-            }
-        });
-        buttonPanel.add(checkMyBooksButton);
-
-        JButton updateStatusButton = createButton("Update Status", "Update the status of the selected book");
+        JButton updateStatusButton = createButton("Update Status", "Update the status of the selected book", Color.BLACK);
         updateStatusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,8 +75,8 @@ public class SellerPanel extends JPanel {
             }
         });
         buttonPanel.add(updateStatusButton);
-
-        JButton viewReviewsButton = createButton("View Reviews", "View reviews for the selected book");
+        
+        JButton viewReviewsButton = createButton("View Reviews", "View reviews for the selected book", Color.BLACK);
         viewReviewsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,16 +88,6 @@ public class SellerPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
 
         loadBooks();
-    }
-
-    private JButton createButton(String text, String toolTip) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("SansSerif", Font.BOLD, 14));
-        button.setToolTipText(toolTip);
-        button.setFocusPainted(false);
-        button.setBackground(new Color(70, 130, 180));
-        button.setForeground(Color.WHITE);
-        return button;
     }
 
     private void loadBooks() {

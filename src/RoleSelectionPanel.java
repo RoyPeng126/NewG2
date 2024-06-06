@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RoleSelectionPanel extends JPanel {
+public class RoleSelectionPanel extends BasePanel {
     private UserDAO userDAO;
     private String selectedRole;
 
@@ -44,7 +44,7 @@ public class RoleSelectionPanel extends JPanel {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        JButton confirmButton = createButton("Confirm", "Confirm your role selection");
+        JButton confirmButton = createButton("Confirm", "Confirm your role selection", Color.BLACK);
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,13 +71,5 @@ public class RoleSelectionPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private JButton createButton(String text, String toolTip) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("SansSerif", Font.BOLD, 14));
-        button.setToolTipText(toolTip);
-        button.setFocusPainted(false);
-        button.setBackground(new Color(70, 130, 180));
-        button.setForeground(Color.WHITE);
-        return button;
-    }
+   
 }

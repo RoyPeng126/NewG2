@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.Vector;
 
-public class BuyerPanel extends JPanel {
+public class BuyerPanel extends BasePanel {
     private JTable bookTable;
     private DefaultTableModel tableModel;
     private UserDAO userDAO;
@@ -44,7 +44,7 @@ public class BuyerPanel extends JPanel {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        JButton buyButton = createButton("Buy", "Purchase the selected book");
+        JButton buyButton = createButton("Buy", "Purchase the selected book", Color.BLACK);
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -73,15 +73,7 @@ public class BuyerPanel extends JPanel {
         loadBooks();
     }
 
-    private JButton createButton(String text, String toolTip) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("SansSerif", Font.BOLD, 14));
-        button.setToolTipText(toolTip);
-        button.setFocusPainted(false);
-        button.setBackground(new Color(70, 130, 180));
-        button.setForeground(Color.WHITE);
-        return button;
-    }
+  
 
     private void loadBooks() {
         tableModel.setRowCount(0);  // Clear existing rows
@@ -123,7 +115,7 @@ public class BuyerPanel extends JPanel {
         reviewPanel.add(ratingLabel);
         reviewPanel.add(ratingField);
 
-        JButton submitReviewButton = createButton("Submit Review", "Submit your review for the book");
+        JButton submitReviewButton = createButton("Submit Review", "Submit your review for the book", Color.BLACK);
         submitReviewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

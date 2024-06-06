@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 public class UserDAO {
     private String currentUserID;
 
@@ -84,16 +86,35 @@ public class UserDAO {
         }
         return false;
     }
-
-    public void updateBookStatus(String bookname, String status) {
-        String query = "UPDATE book SET status = ? WHERE bookname = ?";
+    
+    public boolean isBookPurchased(String bookname) {
+        String query = "SELECT * FROM purchases WHERE bookID = ?";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, status);
-            preparedStatement.setString(2, bookname);
-            preparedStatement.executeUpdate();
+            preparedStatement.setString(1, bookname);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next(); 
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public void updateBookStatus(String bookname, String status) {
+        if (isBookPurchased(bookname)) {
+            String query = "UPDATE book SET status = ? WHERE bookname = ?";
+            try (Connection connection = DatabaseUtil.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, status);
+                preparedStatement.setString(2, bookname);
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            
+            JOptionPane.showMessageDialog(null, "Book has not been purchased yet. Status update not allowed.", "Status Update Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

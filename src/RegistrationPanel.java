@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RegistrationPanel extends JPanel {
+public class RegistrationPanel extends BasePanel {
     private UserDAO userDAO;
     private JTextField userIDField;
     private JPasswordField passwordField;
@@ -41,7 +41,7 @@ public class RegistrationPanel extends JPanel {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        JButton registerButton = createButton("Register", "Create a new account");
+        JButton registerButton = createButton("Register", "Create a new account", Color.BLACK);
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,13 +60,5 @@ public class RegistrationPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private JButton createButton(String text, String toolTip) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("SansSerif", Font.BOLD, 14));
-        button.setToolTipText(toolTip);
-        button.setFocusPainted(false);
-        button.setBackground(new Color(70, 130, 180));
-        button.setForeground(Color.WHITE);
-        return button;
-    }
+   
 }
