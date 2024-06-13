@@ -14,13 +14,11 @@ public class RegistrationPanel extends BasePanel {
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Title
         JLabel titleLabel = new JLabel("User Registration");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-        // Form Panel
         JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -36,7 +34,6 @@ public class RegistrationPanel extends BasePanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Button Panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));

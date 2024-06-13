@@ -16,19 +16,16 @@ public class SellerPanel extends BasePanel {
 
     public SellerPanel(UserDAO userDAO) {
         this.userDAO = userDAO;
-        this.sellerID = userDAO.getCurrentUserID();  // Get current logged-in seller ID
+        this.sellerID = userDAO.getCurrentUserID();  
 
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Title
         JLabel titleLabel = new JLabel("My Books");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
         
-   
-        // Table
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Book Name");
         tableModel.addColumn("Author");
@@ -44,7 +41,6 @@ public class SellerPanel extends BasePanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(scrollPane, BorderLayout.CENTER);
 
-        // Buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
@@ -64,10 +60,10 @@ public class SellerPanel extends BasePanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = bookTable.getSelectedRow();
                 if (selectedRow >= 0) {
-                    String bookName = (String) tableModel.getValueAt(selectedRow, 0); // Use bookName to identify the book
+                    String bookName = (String) tableModel.getValueAt(selectedRow, 0); 
                     userDAO.updateBookStatus(bookName, "Sold");
                     JOptionPane.showMessageDialog(SellerPanel.this, "Status updated!");
-                    loadBooks();  // Reload books to show the updated status
+                    loadBooks();  
                 } else {
                     JOptionPane.showMessageDialog(SellerPanel.this, "Please select a book to update.");
                 }
@@ -90,7 +86,7 @@ public class SellerPanel extends BasePanel {
     }
 
     private void loadBooks() {
-        tableModel.setRowCount(0);  // Clear existing rows
+        tableModel.setRowCount(0);  
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM book WHERE sellerID = ?")) {
@@ -143,7 +139,7 @@ public class SellerPanel extends BasePanel {
                 userDAO.addBook(bookName, author, edition, sellerID);
                 JOptionPane.showMessageDialog(addBookFrame, "Book added!");
                 addBookFrame.dispose();
-                loadBooks();  // Reload books to show the new book
+                loadBooks();  
             }
         });
         addBookPanel.add(submitButton);

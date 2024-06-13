@@ -2,7 +2,7 @@ public class Seller extends Person {
     private String storeName;
 
     public Seller(String id, String name, String storeName) {
-        super(id, name);  // Calling the constructor of the Person class
+        super(id, name);  
         this.storeName = storeName;
     }
 

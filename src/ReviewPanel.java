@@ -15,13 +15,11 @@ public class ReviewPanel extends JPanel {
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Title
         JLabel titleLabel = new JLabel("Book Reviews");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-        // Reviews Table
         DefaultTableModel reviewsTableModel = new DefaultTableModel();
         reviewsTableModel.addColumn("Buyer ID");
         reviewsTableModel.addColumn("Seller ID");

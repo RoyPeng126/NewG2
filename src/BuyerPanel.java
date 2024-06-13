@@ -17,13 +17,11 @@ public class BuyerPanel extends BasePanel {
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Title
         JLabel titleLabel = new JLabel("Available Books");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-        // Table
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Book Name");
         tableModel.addColumn("Author");
@@ -52,12 +50,12 @@ public class BuyerPanel extends BasePanel {
                 if (selectedRow >= 0) {
                     String sellerID = (String) tableModel.getValueAt(selectedRow, 3);
                     String bookName = (String) tableModel.getValueAt(selectedRow, 0);
-                    String buyerID = userDAO.getCurrentUserID();  // get the current logged in user ID
+                    String buyerID = userDAO.getCurrentUserID();  
 
                     if (userDAO.purchaseBook(buyerID, bookName)) {
                         JOptionPane.showMessageDialog(BuyerPanel.this, "Purchase successful!");
                         openReviewDialog(bookName, sellerID, buyerID);
-                        loadBooks();  // Reload books to show the updated status
+                        loadBooks();  
                     } else {
                         JOptionPane.showMessageDialog(BuyerPanel.this, "This book has already been sold.");
                     }
@@ -73,10 +71,8 @@ public class BuyerPanel extends BasePanel {
         loadBooks();
     }
 
-  
-
     private void loadBooks() {
-        tableModel.setRowCount(0);  // Clear existing rows
+        tableModel.setRowCount(0);  
 
         try (Connection conn = DatabaseUtil.getConnection();
              Statement stmt = conn.createStatement();
